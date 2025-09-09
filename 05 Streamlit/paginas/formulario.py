@@ -1,3 +1,5 @@
+from datetime import date
+import pandas as pd
 import streamlit as st
 
 st.header("Formulario")
@@ -74,8 +76,36 @@ sushi = form.checkbox("Sushi")
 hamburguesa = form.checkbox("Hamburguesa")
 tacos = form.checkbox("Tacos")
 
+obesidad = form.toggle("¿Padeces de obesidad?")
 
+fecha = form.date_input(
+    "Fecha de nacimiento",
+    min_value=date(1950, 1, 1),
+    max_value=date(2030, 12, 31)
+    )
 
+submit = form.form_submit_button("Guardar")
+
+if submit:
+    archivo = pd.read_csv("datos/resultados.csv")
+    # "Nombre de la columna": nombre_variable
+    nueva_fila = pd.DataFrame([{
+        "Nombre": nombre,
+        "Edad": edad,
+        "Edad Slider": edad_slider,
+        "Recibir Información": recibir,
+        "Estado": estado,
+        "Pizza": pizza,
+        "Sushi": sushi,
+        "Hamburguesa": hamburguesa,
+        "Tacos": tacos,
+        "Obesidad": obesidad,
+        "Fecha de Nacimiento": fecha
+        }])
+    archivo = pd.concat([archivo, nueva_fila],
+                        ignore_index=True)
+    archivo.to_csv("datos/resultados.csv", index=False)
+    form.success("¡Información guardada!")
 
 
 
